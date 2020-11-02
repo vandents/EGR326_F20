@@ -1,0 +1,10 @@
+//org.eclipse.ui.commands/state/org.eclipse.ui.navigator.resources.nested.changeProjectPresentation/org.eclipse.ui.commands.radioState=false
+ColorsAndFontsPreferencePage.expandedCategories=Torg.eclipse.cdt.ui.presentation\tTorg.eclipse.cdt.ui.CEditor.presentation
+ColorsAndFontsPreferencePage.selectedElement=Forg.eclipse.cdt.ui.editors.textfont
+RUN_IN_BACKGROUND=false
+UIActivities.com.ti.ccstudio.activities.RSEActivity=true
+eclipse.preferences.version=1
+org.eclipse.cdt.internal.ui.compare.AsmMergeViewer=1|Menlo|12.0|0|COCOA|1|Menlo-Regular;
+org.eclipse.cdt.internal.ui.compare.CMergeViewer=1|Menlo|12.0|0|COCOA|1|Menlo-Regular;
+org.eclipse.cdt.ui.editors.textfont=1|Menlo|12.0|0|COCOA|1|Menlo-Regular;
+org.eclipse.ui.commands=<?xml version\="1.0" encoding\="UTF-8"?>\n<org.eclipse.ui.commands>\n<keyBinding contextId\="org.eclipse.ui.textEditorScope" keyConfigurationId\="org.eclipse.ui.defaultAcceleratorConfiguration" keySequence\="COMMAND+ARROW_LEFT"/>\n<keyBinding commandId\="org.eclipse.ui.edit.text.goto.lineEnd" contextId\="org.eclipse.ui.textEditorScope" keyConfigurationId\="com.ti.ccstudio.ui.keyBindingScheme" keySequence\="END"/>\n<keyBinding commandId\="org.eclipse.ui.edit.text.goto.lineStart" contextId\="org.eclipse.ui.textEditorScope" keyConfigurationId\="com.ti.ccstudio.ui.keyBindingScheme" keySequence\="HOME"/>\n<keyBinding contextId\="org.eclipse.ui.textEditorScope" keyConfigurationId\="org.eclipse.ui.defaultAcceleratorConfiguration" keySequence\="COMMAND+ARROW_RIGHT"/>\n</org.eclipse.ui.commands>

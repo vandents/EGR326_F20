@@ -1,0 +1,8 @@
+
+**** Build of configuration Debug for project RTC Test ****
+
+/Applications/ti/ccs1010/ccs/utils/bin/gmake -k -j 15 all -O 
+ 
+gmake: Nothing to be done for 'all'.
+
+**** Build Finished ****

@@ -1,0 +1,147 @@
+#include <stdio.h>
+#include "msp.h"
+#include "SysTick.h"
+#include "Clock_48MHz.h"
+
+
+void Init(void);
+void Stepper_Timer32_1_Init(void);
+void Stepper_Update(void);
+void Stepper_P7_Init(void);
+void Button_P6_Init(void);
+
+
+volatile int16_t Stepper_Step = 600;
+volatile uint8_t Stepper_Interrupt = 0;
+volatile uint8_t Stepper_Zero = 1;
+volatile uint8_t Button_Pressed = 0;
+volatile int8_t Increment = 10;
+
+
+void main(void) {
+	WDT_A->CTL = 0x5A80;	// Stop watchdog timer
+
+	Init();
+
+    while(1) {
+    	if (Stepper_Interrupt) {
+    		Stepper_Update();
+    		Stepper_Interrupt = 0;
+    	}
+
+    	if (Button_Pressed && !Stepper_Zero) {
+    		Stepper_Step += Increment;
+    		Increment = Increment == 10 ? -10 : 10;
+    		Button_Pressed = 0;
+    		P6->IFG &= 0;
+    		P6->IE |= BIT6;
+    	}
+    }
+}
+
+
+void Init(void) {
+	Clock_Init48MHz();
+	Stepper_P7_Init();
+	SysTick_Init();
+	Stepper_Timer32_1_Init();
+	Button_P6_Init();
+	__enable_interrupts();
+}
+
+/**
+ * Button interrupt
+ */
+void PORT6_IRQHandler(void) {
+	if (P6->IFG & BIT6 && !Stepper_Zero) {
+		Button_Pressed = 1;
+		P6->IE &= ~BIT6;
+	}
+}
+
+/**
+ * Port 6 pin initializations (button)
+ */
+void Button_P6_Init(void) {
+	P6->SEL0 &= ~BIT6;
+	P6->SEL1 &= ~BIT6;	// P6.6 to GPIO
+	P6->DIR &= ~BIT6;	// P6.6 to input
+    P6->REN |= BIT6;	// Enable pull-up resistors
+    P6->OUT |= BIT6;	// Pull-up selected
+    P6->IES |= BIT6;	// Trigger on high to low
+    P6->IE |= BIT6;	// Enable interrupt for P6.6
+    P6->IFG = 0;		// Reset interrupt flag
+    NVIC_EnableIRQ(PORT6_IRQn);	// Enable interrupts on NVIC
+}
+
+void Stepper_P7_Init(void) {
+	// P7.4 - 7.7
+    P7->SEL0 &= ~0xF0;
+    P7->SEL1 &= ~0xF0;	// GPIO
+    P7->DIR |= 0xF0;	// Output
+    P7->OUT |= 0x50;	// Output HIGH
+    P7->OUT &= ~0xA0;	// Output LOW
+}
+
+void T32_INT1_IRQHandler(void) {
+	Stepper_Interrupt = 1;
+	TIMER32_1->INTCLR = 0x0;
+}
+
+/**
+ * B	A
+ * 1	1
+ * 1	0
+ * 0	0
+ * 0	1
+ */
+void Stepper_Update(void) {
+	static uint8_t state = 0b11;
+	static uint16_t current_step = 0;
+	uint8_t steady_state = current_step == Stepper_Step;
+	uint8_t right_turn = current_step < Stepper_Step;
+
+	if (steady_state && !Stepper_Zero) return;
+
+	switch(state) {
+		case 0b11:
+			P7->OUT |= BIT4 | BIT6;
+			P7->OUT &= ~(BIT5 | BIT7);
+			state = right_turn == 0 ? 0b10 : 0b01;
+			break;
+		case 0b10:
+			P7->OUT |= BIT4 | BIT7;
+			P7->OUT &= ~(BIT5 | BIT6);
+			state = right_turn == 0 ? 0b00 : 0b11;
+			break;
+		case 0b00:
+			P7->OUT |= BIT5 | BIT7;
+			P7->OUT &= ~(BIT4 | BIT6);
+			state = right_turn == 0 ? 0b01 : 0b10;
+			break;
+		case 0b01:
+			P7->OUT |= BIT5 | BIT6;
+			P7->OUT &= ~(BIT4 | BIT7);
+			state = right_turn == 0 ? 0b11 : 0b00;
+			break;
+		default: break;
+	}
+
+	current_step += right_turn ? 1 : -1;
+
+	if (Stepper_Zero && steady_state) {
+		Stepper_Zero = Stepper_Step ? 1 : 0;
+		Stepper_Step = 0;
+		current_step = 650;
+	}
+}
+
+/**
+ * Configure T32.1 for 600 Hz interrupt
+ */
+void Stepper_Timer32_1_Init(void) {
+	TIMER32_1->CONTROL = 0x000000E8;	// Periodic, interrupts, /256, 16-bit
+	TIMER32_1->LOAD = 400;				// (48MHz / 256) / 940 = 200 Hz
+	TIMER32_1->INTCLR = 0x0;			// Reset interrupt flag
+	NVIC_EnableIRQ(T32_INT1_IRQn);      // Enable interrupts on NVIC
+}

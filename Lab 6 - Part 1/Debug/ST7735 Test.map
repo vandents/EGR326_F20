@@ -1,0 +1,446 @@
+******************************************************************************
+                  TI ARM Linker Unix v20.2.2                   
+******************************************************************************
+>> Linked Sat Oct 24 00:03:57 2020
+
+OUTPUT FILE NAME:   <ST7735 Test.out>
+ENTRY POINT SYMBOL: "_c_int00_noargs"  address: 0000245d
+
+
+MEMORY CONFIGURATION
+
+         name            origin    length      used     unused   attr    fill
+----------------------  --------  ---------  --------  --------  ----  --------
+  MAIN                  00000000   00040000  00002cf2  0003d30e  R  X
+  INFO                  00200000   00004000  00000000  00004000  R  X
+  SRAM_CODE             01000000   00010000  0000023c  0000fdc4  RW X
+  SRAM_DATA             20000000   00010000  0000023c  0000fdc4  RW  
+
+
+SEGMENT ALLOCATION MAP
+
+run origin  load origin   length   init length attrs members
+----------  ----------- ---------- ----------- ----- -------
+00000000    00000000    00002cf8   00002cf8    r-x
+  00000000    00000000    000000e4   000000e4    r-- .intvecs
+  000000e4    000000e4    000023ec   000023ec    r-x .text
+  000024d0    000024d0    000007e2   000007e2    r-- .const
+  00002cb8    00002cb8    00000040   00000040    r-- .cinit
+20000000    20000000    0000003c   00000000    rw-
+  20000000    20000000    00000024   00000000    rw- .bss
+  20000024    20000024    00000018   00000000    rw- .data
+2000fe00    2000fe00    00000200   00000000    rw-
+  2000fe00    2000fe00    00000200   00000000    rw- .stack
+
+
+SECTION ALLOCATION MAP
+
+ output                                  attributes/
+section   page    origin      length       input sections
+--------  ----  ----------  ----------   ----------------
+.intvecs   0    00000000    000000e4     
+                  00000000    000000e4     startup_msp432p401r_ccs.obj (.intvecs:retain)
+
+.text      0    000000e4    000023ec     
+                  000000e4    00001394     ST7735.obj (.text)
+                  00001478    00000abc     main.obj (.text)
+                  00001f34    00000334     system_msp432p401r.obj (.text)
+                  00002268    000000ac     SysTick.obj (.text)
+                  00002314    0000009c     rtsv7M4_T_le_v4SPD16_eabi.lib : memcpy_t2.asm.obj (.text)
+                  000023b0    00000068                                   : copy_decompress_lzss.c.obj (.text:decompress:lzss:__TI_decompress_lzss)
+                  00002418    00000044                                   : autoinit.c.obj (.text:__TI_auto_init_nobinit_nopinit:__TI_auto_init_nobinit_nopinit)
+                  0000245c    00000034                                   : boot_cortex_m.c.obj (.text:_c_int00_noargs:_c_int00_noargs)
+                  00002490    0000001c                                   : copy_zero_init.c.obj (.text:decompress:ZI:__TI_zero_init_nomemset:__TI_zero_init_nomemset)
+                  000024ac    0000000e                                   : copy_decompress_none.c.obj (.text:decompress:none:__TI_decompress_none)
+                  000024ba    0000000e     startup_msp432p401r_ccs.obj (.text)
+                  000024c8    00000004     rtsv7M4_T_le_v4SPD16_eabi.lib : pre_init.c.obj (.text:_system_pre_init)
+                  000024cc    00000004                                   : exit.c.obj (.text:abort:abort)
+
+.const     0    000024d0    000007e2     
+                  000024d0    000004fb     ST7735.obj (.const:.string:Font)
+                  000029cb    00000200     ST7735.obj (.const:.string:dBfs)
+                  00002bcb    00000067     ST7735.obj (.const:.string:Bcmd)
+                  00002c32    0000003b     ST7735.obj (.const:.string:Rcmd1)
+                  00002c6d    0000002b     ST7735.obj (.const:.string:Rcmd3)
+                  00002c98    0000000d     ST7735.obj (.const:.string:Rcmd2green)
+                  00002ca5    0000000d     ST7735.obj (.const:.string:Rcmd2red)
+
+.cinit     0    00002cb8    00000040     
+                  00002cb8    00000016     (.cinit..data.load) [load image, compression = lzss]
+                  00002cce    00000002     --HOLE-- [fill = 0]
+                  00002cd0    0000000c     (__TI_handler_table)
+                  00002cdc    00000004     --HOLE-- [fill = 0]
+                  00002ce0    00000008     (.cinit..bss.load) [load image, compression = zero_init]
+                  00002ce8    00000010     (__TI_cinit_table)
+
+.init_array 
+*          0    00000000    00000000     UNINITIALIZED
+
+.binit     0    00000000    00000000     
+
+.bss       0    20000000    00000024     UNINITIALIZED
+                  20000000    0000000c     (.common:Message)
+                  2000000c    00000004     ST7735.obj (.bss)
+                  20000010    00000004     (.common:Messageindex)
+                  20000014    00000004     (.common:X)
+                  20000018    00000004     (.common:Ymax)
+                  2000001c    00000004     (.common:Ymin)
+                  20000020    00000004     (.common:Yrange)
+
+.data      0    20000024    00000018     UNINITIALIZED
+                  20000024    00000014     ST7735.obj (.data)
+                  20000038    00000004     system_msp432p401r.obj (.data)
+
+.stack     0    2000fe00    00000200     UNINITIALIZED
+                  2000fe00    00000004     rtsv7M4_T_le_v4SPD16_eabi.lib : boot_cortex_m.c.obj (.stack)
+                  2000fe04    000001fc     --HOLE--
+
+__llvm_prf_cnts 
+*          0    20000000    00000000     UNINITIALIZED
+
+MODULE SUMMARY
+
+       Module                        code   ro data   rw data
+       ------                        ----   -------   -------
+    ./
+       ST7735.obj                    5012   2018      112    
+       main.obj                      2748   0         0      
+       system_msp432p401r.obj        820    0         8      
+       startup_msp432p401r_ccs.obj   14     228       0      
+       SysTick.obj                   172    0         0      
+    +--+-----------------------------+------+---------+---------+
+       Total:                        8766   2246      120    
+                                                             
+    /Applications/ti/ccs1010/ccs/tools/compiler/ti-cgt-arm_20.2.2.LTS/lib/rtsv7M4_T_le_v4SPD16_eabi.lib
+       memcpy_t2.asm.obj             156    0         0      
+       copy_decompress_lzss.c.obj    104    0         0      
+       autoinit.c.obj                68     0         0      
+       boot_cortex_m.c.obj           52     0         0      
+       copy_zero_init.c.obj          28     0         0      
+       copy_decompress_none.c.obj    14     0         0      
+       exit.c.obj                    4      0         0      
+       pre_init.c.obj                4      0         0      
+    +--+-----------------------------+------+---------+---------+
+       Total:                        430    0         0      
+                                                             
+       Stack:                        0      0         1024   
+       Linker Generated:             0      58        0      
+    +--+-----------------------------+------+---------+---------+
+       Grand Total:                  9196   2304      1144   
+
+
+LINKER GENERATED COPY TABLES
+
+__TI_cinit_table @ 00002ce8 records: 2, size/record: 8, table size: 16
+	.data: load addr=00002cb8, load size=00000016 bytes, run addr=20000024, run size=00000018 bytes, compression=lzss
+	.bss: load addr=00002ce0, load size=00000008 bytes, run addr=20000000, run size=00000024 bytes, compression=zero_init
+
+
+LINKER GENERATED HANDLER TABLE
+
+__TI_handler_table @ 00002cd0 records: 3, size/record: 4, table size: 12
+	index: 0, handler: __TI_decompress_lzss
+	index: 1, handler: __TI_decompress_none
+	index: 2, handler: __TI_zero_init
+
+
+GLOBAL SYMBOLS: SORTED ALPHABETICALLY BY Name 
+
+address   name                          
+-------   ----                          
+000024c7  ADC14_IRQHandler              
+000024c7  AES256_IRQHandler             
+000024c7  BusFault_Handler              
+000024cd  C$$EXIT                       
+000024c7  COMP_E0_IRQHandler            
+000024c7  COMP_E1_IRQHandler            
+000024c7  CS_IRQHandler                 
+00001ea1  Clock_Init48MHz               
+000024c7  DMA_ERR_IRQHandler            
+000024c7  DMA_INT0_IRQHandler           
+000024c7  DMA_INT1_IRQHandler           
+000024c7  DMA_INT2_IRQHandler           
+000024c7  DMA_INT3_IRQHandler           
+000024c7  DebugMon_Handler              
+000024c7  Default_Handler               
+0000015b  Delay1ms                      
+000014a9  DrawChar_Test                 
+00001baf  DrawEGR326_test               
+000024c7  EUSCIA0_IRQHandler            
+000024c7  EUSCIA1_IRQHandler            
+000024c7  EUSCIA2_IRQHandler            
+000024c7  EUSCIA3_IRQHandler            
+000024c7  EUSCIB0_IRQHandler            
+000024c7  EUSCIB1_IRQHandler            
+000024c7  EUSCIB2_IRQHandler            
+000024c7  EUSCIB3_IRQHandler            
+000024c7  FLCTL_IRQHandler              
+000024c7  FPU_IRQHandler                
+000024c7  HardFault_Handler             
+000024c7  MemManage_Handler             
+20000000  Message                       
+20000010  Messageindex                  
+000024c7  NMI_Handler                   
+00001417  Output_Clear                  
+00001431  Output_Color                  
+00001407  Output_Init                   
+00001421  Output_Off                    
+00001429  Output_On                     
+000024c7  PCM_IRQHandler                
+000024c7  PORT1_IRQHandler              
+000024c7  PORT2_IRQHandler              
+000024c7  PORT3_IRQHandler              
+000024c7  PORT4_IRQHandler              
+000024c7  PORT5_IRQHandler              
+000024c7  PORT6_IRQHandler              
+000024c7  PSS_IRQHandler                
+000024c7  PendSV_Handler                
+000024c7  RTC_C_IRQHandler              
+000024bb  Reset_Handler                 
+00000735  ST7735_Color565               
+00000799  ST7735_DrawBitmap             
+00000b0d  ST7735_DrawChar               
+00000997  ST7735_DrawCharS              
+0000052d  ST7735_DrawFastHLine          
+0000046f  ST7735_DrawFastVLine          
+00000415  ST7735_DrawPixel              
+00000c7b  ST7735_DrawString             
+00000629  ST7735_FillRect               
+000005e5  ST7735_FillScreen             
+000002e3  ST7735_InitB                  
+00000303  ST7735_InitR                  
+00000eaf  ST7735_InvertDisplay          
+000012ed  ST7735_OutChar                
+000013a9  ST7735_OutString              
+00000d69  ST7735_OutUDec                
+000011f9  ST7735_PlotBar                
+00000ec7  ST7735_PlotClear              
+00000fe9  ST7735_PlotLine               
+00001299  ST7735_PlotNext               
+000012b3  ST7735_PlotNextErase          
+00000f23  ST7735_PlotPoint              
+00001123  ST7735_PlotPoints             
+0000124f  ST7735_PlotdBfs               
+00000d43  ST7735_SetCursor              
+00000de5  ST7735_SetRotation            
+000013c7  ST7735_SetTextColor           
+00000769  ST7735_SwapColor              
+000024c7  SVC_Handler                   
+2000002c  StTextColor                   
+20000024  StX                           
+20000028  StY                           
+00002285  SysTick_Delay_ms              
+000022d9  SysTick_Delay_us              
+000024c7  SysTick_Handler               
+00002269  SysTick_Init                  
+20000038  SystemCoreClock               
+00001f35  SystemCoreClockUpdate         
+000021ad  SystemInit                    
+000024c7  T32_INT1_IRQHandler           
+000024c7  T32_INT2_IRQHandler           
+000024c7  T32_INTC_IRQHandler           
+000024c7  TA0_0_IRQHandler              
+000024c7  TA0_N_IRQHandler              
+000024c7  TA1_0_IRQHandler              
+000024c7  TA1_N_IRQHandler              
+000024c7  TA2_0_IRQHandler              
+000024c7  TA2_N_IRQHandler              
+000024c7  TA3_0_IRQHandler              
+000024c7  TA3_N_IRQHandler              
+000024c7  UsageFault_Handler            
+4000480c  WDTCTL_SYM                    
+000024c7  WDT_A_IRQHandler              
+20000014  X                             
+20000018  Ymax                          
+2000001c  Ymin                          
+20000020  Yrange                        
+20010000  __STACK_END                   
+00000200  __STACK_SIZE                  
+00002ce8  __TI_CINIT_Base               
+00002cf8  __TI_CINIT_Limit              
+00002cd0  __TI_Handler_Table_Base       
+00002cdc  __TI_Handler_Table_Limit      
+00002419  __TI_auto_init_nobinit_nopinit
+000023b1  __TI_decompress_lzss          
+000024ad  __TI_decompress_none          
+ffffffff  __TI_pprof_out_hndl           
+ffffffff  __TI_prof_data_size           
+ffffffff  __TI_prof_data_start          
+00000000  __TI_static_base__            
+00002491  __TI_zero_init_nomemset       
+00002315  __aeabi_memcpy                
+00002315  __aeabi_memcpy4               
+00002315  __aeabi_memcpy8               
+ffffffff  __binit__                     
+ffffffff  __c_args__                    
+UNDEFED   __mpu_init                    
+2000fe00  __stack                       
+20000000  __start___llvm_prf_cnts       
+20000000  __stop___llvm_prf_cnts        
+0000245d  _c_int00_noargs               
+UNDEFED   _system_post_cinit            
+000024c9  _system_pre_init              
+000024cd  abort                         
+ffffffff  binit                         
+000029cb  dBfs                          
+000013f9  ferror                        
+000013ed  fgetc                         
+00000d01  fillmessage                   
+000013db  fputc                         
+00000000  interruptVectors              
+20000034  lastj                         
+00001479  main                          
+00002315  memcpy                        
+0000014d  parrotdelay                   
+
+
+GLOBAL SYMBOLS: SORTED BY Symbol Address 
+
+address   name                          
+-------   ----                          
+00000000  __TI_static_base__            
+00000000  interruptVectors              
+0000014d  parrotdelay                   
+0000015b  Delay1ms                      
+00000200  __STACK_SIZE                  
+000002e3  ST7735_InitB                  
+00000303  ST7735_InitR                  
+00000415  ST7735_DrawPixel              
+0000046f  ST7735_DrawFastVLine          
+0000052d  ST7735_DrawFastHLine          
+000005e5  ST7735_FillScreen             
+00000629  ST7735_FillRect               
+00000735  ST7735_Color565               
+00000769  ST7735_SwapColor              
+00000799  ST7735_DrawBitmap             
+00000997  ST7735_DrawCharS              
+00000b0d  ST7735_DrawChar               
+00000c7b  ST7735_DrawString             
+00000d01  fillmessage                   
+00000d43  ST7735_SetCursor              
+00000d69  ST7735_OutUDec                
+00000de5  ST7735_SetRotation            
+00000eaf  ST7735_InvertDisplay          
+00000ec7  ST7735_PlotClear              
+00000f23  ST7735_PlotPoint              
+00000fe9  ST7735_PlotLine               
+00001123  ST7735_PlotPoints             
+000011f9  ST7735_PlotBar                
+0000124f  ST7735_PlotdBfs               
+00001299  ST7735_PlotNext               
+000012b3  ST7735_PlotNextErase          
+000012ed  ST7735_OutChar                
+000013a9  ST7735_OutString              
+000013c7  ST7735_SetTextColor           
+000013db  fputc                         
+000013ed  fgetc                         
+000013f9  ferror                        
+00001407  Output_Init                   
+00001417  Output_Clear                  
+00001421  Output_Off                    
+00001429  Output_On                     
+00001431  Output_Color                  
+00001479  main                          
+000014a9  DrawChar_Test                 
+00001baf  DrawEGR326_test               
+00001ea1  Clock_Init48MHz               
+00001f35  SystemCoreClockUpdate         
+000021ad  SystemInit                    
+00002269  SysTick_Init                  
+00002285  SysTick_Delay_ms              
+000022d9  SysTick_Delay_us              
+00002315  __aeabi_memcpy                
+00002315  __aeabi_memcpy4               
+00002315  __aeabi_memcpy8               
+00002315  memcpy                        
+000023b1  __TI_decompress_lzss          
+00002419  __TI_auto_init_nobinit_nopinit
+0000245d  _c_int00_noargs               
+00002491  __TI_zero_init_nomemset       
+000024ad  __TI_decompress_none          
+000024bb  Reset_Handler                 
+000024c7  ADC14_IRQHandler              
+000024c7  AES256_IRQHandler             
+000024c7  BusFault_Handler              
+000024c7  COMP_E0_IRQHandler            
+000024c7  COMP_E1_IRQHandler            
+000024c7  CS_IRQHandler                 
+000024c7  DMA_ERR_IRQHandler            
+000024c7  DMA_INT0_IRQHandler           
+000024c7  DMA_INT1_IRQHandler           
+000024c7  DMA_INT2_IRQHandler           
+000024c7  DMA_INT3_IRQHandler           
+000024c7  DebugMon_Handler              
+000024c7  Default_Handler               
+000024c7  EUSCIA0_IRQHandler            
+000024c7  EUSCIA1_IRQHandler            
+000024c7  EUSCIA2_IRQHandler            
+000024c7  EUSCIA3_IRQHandler            
+000024c7  EUSCIB0_IRQHandler            
+000024c7  EUSCIB1_IRQHandler            
+000024c7  EUSCIB2_IRQHandler            
+000024c7  EUSCIB3_IRQHandler            
+000024c7  FLCTL_IRQHandler              
+000024c7  FPU_IRQHandler                
+000024c7  HardFault_Handler             
+000024c7  MemManage_Handler             
+000024c7  NMI_Handler                   
+000024c7  PCM_IRQHandler                
+000024c7  PORT1_IRQHandler              
+000024c7  PORT2_IRQHandler              
+000024c7  PORT3_IRQHandler              
+000024c7  PORT4_IRQHandler              
+000024c7  PORT5_IRQHandler              
+000024c7  PORT6_IRQHandler              
+000024c7  PSS_IRQHandler                
+000024c7  PendSV_Handler                
+000024c7  RTC_C_IRQHandler              
+000024c7  SVC_Handler                   
+000024c7  SysTick_Handler               
+000024c7  T32_INT1_IRQHandler           
+000024c7  T32_INT2_IRQHandler           
+000024c7  T32_INTC_IRQHandler           
+000024c7  TA0_0_IRQHandler              
+000024c7  TA0_N_IRQHandler              
+000024c7  TA1_0_IRQHandler              
+000024c7  TA1_N_IRQHandler              
+000024c7  TA2_0_IRQHandler              
+000024c7  TA2_N_IRQHandler              
+000024c7  TA3_0_IRQHandler              
+000024c7  TA3_N_IRQHandler              
+000024c7  UsageFault_Handler            
+000024c7  WDT_A_IRQHandler              
+000024c9  _system_pre_init              
+000024cd  C$$EXIT                       
+000024cd  abort                         
+000029cb  dBfs                          
+00002cd0  __TI_Handler_Table_Base       
+00002cdc  __TI_Handler_Table_Limit      
+00002ce8  __TI_CINIT_Base               
+00002cf8  __TI_CINIT_Limit              
+20000000  Message                       
+20000000  __start___llvm_prf_cnts       
+20000000  __stop___llvm_prf_cnts        
+20000010  Messageindex                  
+20000014  X                             
+20000018  Ymax                          
+2000001c  Ymin                          
+20000020  Yrange                        
+20000024  StX                           
+20000028  StY                           
+2000002c  StTextColor                   
+20000034  lastj                         
+20000038  SystemCoreClock               
+2000fe00  __stack                       
+20010000  __STACK_END                   
+4000480c  WDTCTL_SYM                    
+ffffffff  __TI_pprof_out_hndl           
+ffffffff  __TI_prof_data_size           
+ffffffff  __TI_prof_data_start          
+ffffffff  __binit__                     
+ffffffff  __c_args__                    
+ffffffff  binit                         
+UNDEFED   __mpu_init                    
+UNDEFED   _system_post_cinit            
+
+[144 symbols]

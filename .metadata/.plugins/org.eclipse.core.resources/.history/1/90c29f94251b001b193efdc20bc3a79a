@@ -1,0 +1,104 @@
+#include <stdio.h>
+#include "msp.h"
+#include "Clock_48MHz.h"
+#include "SysTick.h"
+#include "SevenSeg.h"
+
+
+void Init(void);
+void Button_P6_Init(void);
+void Timer32_1_Init(void);
+
+
+volatile uint8_t Button_Pressed = 0;
+volatile int Button_Count = 0;
+volatile int Second_Count = 97;
+
+
+/**
+ * main.c
+ */
+void main(void) {
+	WDT_A->CTL = 0x5A80;	// Stop watchdog timer
+
+	Init();
+
+	while(1) {
+    	if (Button_Pressed) {
+    		Button_Count++;				// Increment button count
+    		Button_Pressed = 0;			// Reset button flag
+    		TIMER32_1->CONTROL ^= 0x20;	// Toggle timer
+
+    		// Update display
+    		SevenSeg_WriteInteger(0, 3, Second_Count);
+    		SevenSeg_WriteInteger(4, 7, Button_Count);
+    	}
+	}
+}
+
+
+/** Initializations */
+void Init(void) {
+    // Terminate all IO pins
+    P1->DIR |= 0xFF; P1->OUT = 0;
+    P2->DIR |= 0xFF; P2->OUT = 0;
+    P3->DIR |= 0xFF; P3->OUT = 0;
+    P4->DIR |= 0xFF; P4->OUT = 0;
+    P5->DIR |= 0xFF; P5->OUT = 0;
+    P6->DIR |= 0xFF; P6->OUT = 0;
+    P7->DIR |= 0xFF; P7->OUT = 0;
+    P8->DIR |= 0xFF; P8->OUT = 0;
+    P9->DIR |= 0xFF; P9->OUT = 0;
+    P10->DIR |= 0xFF; P10->OUT = 0;
+
+	Clock_Init48MHz();
+	SysTick_Init();
+	SevenSeg_UCA1_SPI_Init();
+	Button_P6_Init();
+	Timer32_1_Init();
+	__enable_irq();			// Enable interrupts
+}
+
+/**
+ * Port 6 pin initializations (button)
+ */
+void Button_P6_Init(void) {
+	P6->SEL0 &= ~BIT6;
+	P6->SEL1 &= ~BIT6;	// P6.6 to GPIO
+	P6->DIR &= ~BIT6;	// P6.6 to input
+    P6->REN |= BIT6;	// Enable pull-up resistors
+    P6->OUT |= BIT6;	// Pull-up selected
+    P6->IES |= BIT6;	// Trigger on high to low
+    P6->IE |= BIT6;		// Enable interrupt for P6.6
+    P6->IFG = 0;		// Reset interrupt flag
+    NVIC_EnableIRQ(PORT6_IRQn);	// Enable interrupts on NVIC
+}
+
+/**
+ * Button interrupt
+ */
+void PORT6_IRQHandler(void) {
+	if (P6->IFG & BIT6) {
+		Button_Pressed = 1;
+		P6->IFG &= 0;
+	}
+}
+
+/**
+ * Configure T32.1 for 1 Hz interrupt
+ */
+void Timer32_1_Init(void) {
+	TIMER32_1->CONTROL = 0x000000EA;	// Periodic, interrupts, /256, 32-bit
+	TIMER32_1->LOAD = 187500;			// (48MHz / 256) / 187500 = 1 Hz
+	TIMER32_1->INTCLR = 0x0;			// Reset interrupt flag
+	NVIC_EnableIRQ(T32_INT1_IRQn);      // Enable interrupts on NVIC
+}
+
+/**
+ * Timer32.1 ISR for incrementing seconds
+ */
+void T32_INT1_IRQHandler(void) {
+	TIMER32_1->INTCLR = 0x0;	// Reset interrupt flag
+	Second_Count = Second_Count >= 100 ? 0 : ++Second_Count;
+	SevenSeg_WriteInteger(0, 3, Second_Count);
+}
