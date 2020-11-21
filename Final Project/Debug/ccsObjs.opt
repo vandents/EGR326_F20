@@ -1,0 +1,1 @@
+"./DS3231_RTC.obj" "./LCD.obj" "./Motor.obj" "./Rotary.obj" "./ST7735.obj" "./SevenSeg.obj" "./Stepper.obj" "./Time.obj" "./main.obj" "./startup_msp432p401r_ccs.obj" "./system_msp432p401r.obj" "../msp432p401r.cmd" -llibc.a 

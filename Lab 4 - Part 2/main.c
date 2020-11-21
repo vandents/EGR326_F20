@@ -59,7 +59,7 @@ void P3init(void) {
     // Pull up selected (P3.7)
     P3->OUT |= BIT7;
 
-    /* P2.5, P2.7 */
+    /* P3.5, P3.7 */
     // Enable interrupts
     P3->IE |= 0xA0;
     // Trigger on rising edge (P3.5)
@@ -69,7 +69,7 @@ void P3init(void) {
     // Reset interrupt flag
     P3->IFG = 0;
 
-    // Enable Port 2 interrupt on the NVIC
+    // Enable Port 3 interrupts on NVIC
     NVIC_EnableIRQ(PORT3_IRQn);
 }
 

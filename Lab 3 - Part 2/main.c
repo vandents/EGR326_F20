@@ -57,9 +57,9 @@ void main() {
 
 	while(1) {
 	    // Reset interrupt flag
-	    P4->IFG = 0;
+//	    P4->IFG = 0;
 		// 10us trigger signal on P4.6
-        P4->DIR |= BIT6;
+//        P4->DIR |= BIT6;
         P4->OUT |= BIT6;
         SysTick_delay_us(10);
         P4->OUT &= ~BIT6;
@@ -122,12 +122,12 @@ void PORT4_IRQHandler(void) {
     	// Rising edge of echo
         if (!(P4->IES & BIT7)) {
             // Record time of rising edge
-            previous = SysTick->VAL;
+            previous = current;
             // Trigger on falling edge
             P4->IES |= BIT7;
 
         // Falling edge of echo
-        } else if (P4->IFG & BIT7) {
+        } else {
         	// Calculate inches from delay
         	// 1 * ECHO_DELAY = 0.333333 us
         	// inches = (delay - calibration) / (3 * inch conversion)
@@ -138,8 +138,7 @@ void PORT4_IRQHandler(void) {
         }
     }
 
-    // Reset interrupt flag
-    P4->IFG = 0;
+    P4->IFG = 0;	// Reset interrupt flag
 }
 
 

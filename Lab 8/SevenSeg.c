@@ -79,8 +79,8 @@ void SevenSeg_Write(uint8_t address, uint8_t data) {
 
 /**
  * Write an integer to a given range of digits
- * @param low_digit Low digit (inclusive)
- * @param high_digit High digit (inclusive)
+ * @param low_digit Low digit (inclusive, 0 - 7)
+ * @param high_digit High digit (inclusive, 0 - 7)
  * @param data Integer to be written to LCD
  */
 void SevenSeg_WriteInteger(uint8_t low_digit, uint8_t high_digit, int data) {

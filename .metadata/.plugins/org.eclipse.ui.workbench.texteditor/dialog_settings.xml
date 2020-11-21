@@ -1,34 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value="48"/>
+		<item key="selection" value="Blue"/>
 		<item key="wrap" value="true"/>
 		<item key="casesensitive" value="false"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
+			<item value="blue"/>
+			<item value="white"/>
+			<item value="ST7735_SetCursor"/>
+			<item value="ST7735_FillScreen"/>
+			<item value="setcursor"/>
+			<item value="commandList"/>
+			<item value="abs"/>
+			<item value="print"/>
+			<item value="printf"/>
+			<item value="clk"/>
 			<item value="48"/>
 			<item value="clock"/>
 			<item value="int"/>
 			<item value="s1"/>
 			<item value="bitmap"/>
-			<item value="bmp"/>
-			<item value="mb"/>
-			<item value="mbs"/>
-			<item value="mbp"/>
-			<item value="delay"/>
-			<item value="BIT5"/>
-			<item value="SCL"/>
-			<item value="f`"/>
-			<item value="SysTick"/>
-			<item value="RTC_Decimal_to_BCD"/>
 		</list>
 		<list key="replacehistory">
+			<item value="Blue"/>
+			<item value="White"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
-		<item key="DIALOG_X_ORIGIN" value="1156"/>
+		<item key="DIALOG_X_ORIGIN" value="730"/>
 		<item key="DIALOG_Y_ORIGIN" value="216"/>
 		<item key="DIALOG_WIDTH" value="294"/>
 		<item key="DIALOG_HEIGHT" value="408"/>

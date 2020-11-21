@@ -55,22 +55,22 @@ void Stepper_Update(void) {
 		case 0b11:
 			P7->OUT |= BIT4 | BIT6;
 			P7->OUT &= ~(BIT5 | BIT7);
-			state = right_turn == 0 ? 0b10 : 0b01;
+			state = right_turn ? 0b01 : 0b10;
 			break;
 		case 0b10:
 			P7->OUT |= BIT4 | BIT7;
 			P7->OUT &= ~(BIT5 | BIT6);
-			state = right_turn == 0 ? 0b00 : 0b11;
+			state = right_turn ? 0b11 : 0b00;
 			break;
 		case 0b00:
 			P7->OUT |= BIT5 | BIT7;
 			P7->OUT &= ~(BIT4 | BIT6);
-			state = right_turn == 0 ? 0b01 : 0b10;
+			state = right_turn ? 0b10 : 0b01;
 			break;
 		case 0b01:
 			P7->OUT |= BIT5 | BIT6;
 			P7->OUT &= ~(BIT4 | BIT7);
-			state = right_turn == 0 ? 0b11 : 0b00;
+			state = right_turn ? 0b00 : 0b11;
 			break;
 		default: break;
 	}
