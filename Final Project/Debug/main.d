@@ -29,6 +29,7 @@ main.obj: ../Rotary.h
 main.obj: ../DS3231_RTC.h
 main.obj: ../Motor.h
 main.obj: ../Stepper.h
+main.obj: ../Proximity.h
 
 ../main.c: 
 /Applications/ti/ccs1010/ccs/tools/compiler/ti-cgt-arm_20.2.3.LTS/include/stdio.h: 
@@ -59,3 +60,4 @@ main.obj: ../Stepper.h
 ../DS3231_RTC.h: 
 ../Motor.h: 
 ../Stepper.h: 
+../Proximity.h: 

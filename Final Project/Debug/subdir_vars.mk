@@ -10,6 +10,7 @@ C_SRCS += \
 ../DS3231_RTC.c \
 ../LCD.c \
 ../Motor.c \
+../Proximity.c \
 ../Rotary.c \
 ../ST7735.c \
 ../SevenSeg.c \
@@ -23,6 +24,7 @@ C_DEPS += \
 ./DS3231_RTC.d \
 ./LCD.d \
 ./Motor.d \
+./Proximity.d \
 ./Rotary.d \
 ./ST7735.d \
 ./SevenSeg.d \
@@ -36,6 +38,7 @@ OBJS += \
 ./DS3231_RTC.obj \
 ./LCD.obj \
 ./Motor.obj \
+./Proximity.obj \
 ./Rotary.obj \
 ./ST7735.obj \
 ./SevenSeg.obj \
@@ -49,6 +52,7 @@ OBJS__QUOTED += \
 "DS3231_RTC.obj" \
 "LCD.obj" \
 "Motor.obj" \
+"Proximity.obj" \
 "Rotary.obj" \
 "ST7735.obj" \
 "SevenSeg.obj" \
@@ -62,6 +66,7 @@ C_DEPS__QUOTED += \
 "DS3231_RTC.d" \
 "LCD.d" \
 "Motor.d" \
+"Proximity.d" \
 "Rotary.d" \
 "ST7735.d" \
 "SevenSeg.d" \
@@ -75,6 +80,7 @@ C_SRCS__QUOTED += \
 "../DS3231_RTC.c" \
 "../LCD.c" \
 "../Motor.c" \
+"../Proximity.c" \
 "../Rotary.c" \
 "../ST7735.c" \
 "../SevenSeg.c" \

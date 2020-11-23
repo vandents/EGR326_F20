@@ -20,6 +20,7 @@ Motor.obj: /Applications/ti/ccs1010/ccs/ccs_base/arm/include/CMSIS/core_cm4.h
 Motor.obj: /Applications/ti/ccs1010/ccs/ccs_base/arm/include/CMSIS/cmsis_compiler.h
 Motor.obj: /Applications/ti/ccs1010/ccs/ccs_base/arm/include/CMSIS/cmsis_ccs.h
 Motor.obj: /Applications/ti/ccs1010/ccs/ccs_base/arm/include/system_msp432p401r.h
+Motor.obj: /Applications/ti/ccs1010/ccs/tools/compiler/ti-cgt-arm_20.2.3.LTS/include/stdlib.h
 
 ../Motor.c: 
 ../Motor.h: 
@@ -41,3 +42,4 @@ Motor.obj: /Applications/ti/ccs1010/ccs/ccs_base/arm/include/system_msp432p401r.
 /Applications/ti/ccs1010/ccs/ccs_base/arm/include/CMSIS/cmsis_compiler.h: 
 /Applications/ti/ccs1010/ccs/ccs_base/arm/include/CMSIS/cmsis_ccs.h: 
 /Applications/ti/ccs1010/ccs/ccs_base/arm/include/system_msp432p401r.h: 
+/Applications/ti/ccs1010/ccs/tools/compiler/ti-cgt-arm_20.2.3.LTS/include/stdlib.h: 

@@ -6,6 +6,7 @@
  */
 
 #include "Motor.h"
+#include <stdlib.h>
 
 
 /**
@@ -103,7 +104,7 @@ void PORT5_IRQHandler(void) {
 		last_4 = current;
 		Motor_Spinning = 1;
 
-		// RPM = (60 sec * 187500 * 2 / (14 magnets * 20 gear ratio)) / sum of periods
+		// RPM = 60 sec * 187500 * 2 / (14 magnets * 20 gear ratio) / (sum of periods)
 		RPM = 80357.0 / (period_4 + period_5);
 		// MPH = (71 mph / 0.36 sec / 60 sec) * RPM
 		Speed = 0.426 * RPM;
@@ -114,10 +115,10 @@ void PORT5_IRQHandler(void) {
 		last_5 = current;
 		Motor_Spinning = 1;
 
-		// RPM = (60 sec * 187500 * 2 / (14 magnets * 20 gear ratio)) / sum of periods
+		// RPM = 60 sec * 187500 * 2 / (14 magnets * 20 gear ratio) / (sum of periods)
 		RPM = 80357.0 / (period_4 + period_5);
 		// MPH = (71 mph / 0.36 sec / 60 sec) * RPM
-		Speed = RPM * 0.426;
+		Speed = 0.426 * RPM;
 	}
 
 	P5->IFG = 0;	// Reset Port 5 interrupt flag

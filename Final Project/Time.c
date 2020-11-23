@@ -66,6 +66,19 @@ void SysTick_Init(void) {
 }
 
 /**
+ * Configure SysTick for periodic interrupt
+ * @example
+ * 	void SysTick_Handler(void) { . . . . }
+ * @param ms Period of interrupt in seconds
+ */
+void SysTick_Interrupt_ms_Init(uint16_t millis) {
+	SysTick->CTRL = 0;					// Disable SysTick
+	SysTick->LOAD = 48000 * millis - 1;	// Reload value
+	SysTick->VAL = 0;					// Any write to current clears it
+	SysTick->CTRL = 0x07;				// Enable SysTick, 48MHz, interrupts
+}
+
+/**
  * SysTick delay milliseconds. Recursive if delay > 349 ms
  * @param delay Delay in ms
  */
@@ -98,45 +111,62 @@ void SysTick_Delay_us(uint16_t delay) {
  * Configure T32.1 for periodic interrupt
  * @example
  * 	void T32_INT1_IRQHandler(void) { . . . . }
- * @param hertz Desired frequency of interrupt in 0.1 Hz
+ * @param millis Period of interrupt in milliseconds
  */
-void Timer32_1_Interrupt_Init(int hertz) {
+void Timer32_1_Interrupt_ms_Init(uint16_t millis) {
 	TIMER32_1->CONTROL = 0x000000EA;			// Periodic, interrupts, /256, 32-bit
-	TIMER32_1->LOAD = ((48000000 / 256) * hertz) / 10;	// (48MHz / 256) / 187500 = 1 Hz
+	TIMER32_1->LOAD = 187500 * millis / 1000;	// (48MHz / 256) * 1 ms = 1 Hz
 	TIMER32_1->INTCLR = 0;						// Reset interrupt flag
 	NVIC_SetPriority(T32_INT1_IRQn, 7);			// Priority 7
 	NVIC_EnableIRQ(T32_INT1_IRQn);				// Enable T32.1 interrupts
 }
 
+///**
+// * Configure T32.1 for 187500 Hz countdown from 4294967295
+// */
+//void Timer32_2_Counter_Init(void) {
+//	TIMER32_2->CONTROL = 0x0000008A;	// Free running, 32-bit, HFXTCLK / 256
+//	TIMER32_2->LOAD = 0xFFFFFFFF;		// Max count
+//	TIMER32_2->INTCLR = 0;				// Reset interrupt flag
+//}
+
 /**
  * Configure T32.1 for 187500 Hz countdown from 4294967295
  */
-void Timer32_2_Counter_Init(void) {
-	TIMER32_2->CONTROL = 0x0000008A;	// Free running, 32-bit, HFXTCLK / 256
-	TIMER32_2->LOAD = 0xFFFFFFFF;		// Max count
-	TIMER32_2->INTCLR = 0;				// Reset interrupt flag
+void Timer32_2_Interrupt_ms_Init(uint16_t millis) {
+	TIMER32_2->CONTROL = 0x000000EA;			// Periodic, interrupts, /256, 32-bit
+	TIMER32_2->LOAD = 187500 * millis / 1000;	// (48MHz / 256) * 1 ms = 1 Hz
+	TIMER32_2->INTCLR = 0;						// Reset interrupt flag
+	NVIC_SetPriority(T32_INT2_IRQn, 7);			// Priority 7
+	NVIC_EnableIRQ(T32_INT2_IRQn);				// Enable T32.2 interrupts
 }
 
 
 /**********************************************************
  * Timer A
+ *
+ * TODO:
+ * 	Make Timer32_2 another interrupt.
+ * 	Look at some other value for hall-effect rpm sensor.
+ * 	Move logic into SyStick interrupt.
+ * 	Make two of the TimerA's output to the piezios.
  **********************************************************/
 
-/**
- * Configure TA0.0 for periodic interrupt
- * @example
- * 	void TA0_0_IRQHandler(void) { . . . . }
- * @param seconds Period of interrupt in seconds
- */
-void TimerA0_0_Interrupt_s_Init(uint16_t seconds) {
-	// 0000 0001 1101 0010
-	// ACLK, /8, up mode, interrupt enabled
-	TIMER_A0->CTL = 0x01D0;					// 8192 / 8 = 1024 Hz
-	TIMER_A0->CCTL[0] = 0x0010;				// Enable capture/compare interrupt
-	TIMER_A0->CCR[0] = seconds * 1024 - 1;	// Set period
-	NVIC_SetPriority(TA0_0_IRQn, 7);		// Priority 7
-	NVIC_EnableIRQ(TA0_0_IRQn);				// Enable TA0.0 interrupts
-}
+///**
+// * Configure TA0.0 for periodic interrupt
+// * @example
+// * 	void TA0_0_IRQHandler(void) { . . . . }
+// * @param millis Period of interrupt in seconds
+// */
+//void TimerA0_0_Interrupt_ms_Init(uint16_t millis) {
+//	// 0000 0001 1101 0010
+//	// ACLK, /8, up mode, interrupt enabled
+//	TIMER_A0->CTL = 0x01D0;					// 8192 / 8 = 1024 Hz
+//	TIMER_A0->CCTL[0] = 0x0010;				// Enable capture/compare interrupt
+//	TIMER_A0->CCR[0] = millis - 1;			// Set period
+//	NVIC_SetPriority(TA0_0_IRQn, 7);		// Priority 7
+//	NVIC_EnableIRQ(TA0_0_IRQn);				// Enable TA0.0 interrupts
+//}
 
 /**
  * Configure TA1.0 for periodic interrupt

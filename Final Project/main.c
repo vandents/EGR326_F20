@@ -33,10 +33,55 @@
 void Init(void);
 
 /* Global variables */
+// Middle octave
+#define B 494
+#define Bb 466
+#define As 466
+#define A 440
+#define Gs 415
+#define Ab 415
+#define G 392
+#define Fs 370
+#define G1 370
+#define F 349
+#define E 330
+#define Ds 311
+#define Eb 311
+#define D 294
+#define Cs 277
+#define Db 277
+#define C 262
+
+// Lower octave
+#define _B 247
+#define _Bb 233
+#define _As 223
+#define _A 220
+#define _Gs 208
+#define _Ab 208
+#define _G 196
+#define _Fs 185
+#define _Gb 185
+#define _F 175
+#define _E 165
+#define _Ds 156
+#define _Eb 156
+#define _D 147
+#define _Cs 139
+#define _Db 139
+#define _C 131
+
+#define REST 0
+#define TEMPLEOS_TUNE_LENGTH 119
+#define _TEMPLEOS_TUNE_LENGTH 86
+
+volatile uint8_t Update_Speakers = 0;
+volatile uint16_t Tune_Index = 0;
+volatile uint16_t _Tune_Index = 0;
 volatile uint8_t Update_Gauges = 0;			// True when speedometers/tachometers ready to be updated
 volatile uint8_t Update_LCD_A_Scroll = 0;	// True when LCD should scroll left one digit
 volatile uint8_t Read_RTC = 1;				// True when time and temp on RTC should be read
-volatile uint16_t Backup_Distance = 0;		// Proximity sensor distance (inches)
+volatile uint8_t Update_Warning_LED = 0;	// True when warning LED should be update
 const uint16_t ADC_PWM_Vector[256] = {		// Vector for converting a 255-bit ADC14 reading to PWM duty cycle
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 800, 800, 800,
 	800, 800, 800, 801, 802, 803, 804, 805, 806, 807, 808, 809, 810, 811, 812, 813,
@@ -56,6 +101,34 @@ const uint16_t ADC_PWM_Vector[256] = {		// Vector for converting a 255-bit ADC14
 	1620, 1628, 1636, 1644, 1652, 1660, 1668, 1676, 1684, 1692, 1700, 1708, 1716,
 	1724, 1732, 1740, 1748, 1756, 1764, 1772, 1781, 1790, 1799, 1800, 1800, 1800,
 	1800, 1800, 1800, 1800, 1800, 1800, 1800
+};
+const uint16_t TempleOS_Tune[] = {
+	D, D, REST, E, E, REST, F, F, F, F, REST, F, F, F, F, REST,				// 16
+	E, E, REST, E, E, REST, F, F, REST, D, D, D, D, D, D, REST,				// 16
+	C, C, REST, D, D, REST, D, D, REST, E, E, E, E, REST, C, C, REST,		// 17
+	G, REST, F, REST, D, D, REST, E, E, REST, F, F, REST, F, F, F, F, REST,	// 18
+
+	D, D, REST, C, C, REST, D, D, D, D, REST, E, E, E, E, REST,				// 16
+	A, A, REST, A, A, REST, E, E, REST, E, E, REST, F, F, REST, E, E, REST,	// 18
+	D, D, REST, G, G, REST, B, B, REST, D, D, REST, C, C, REST, F, F, REST	// 18
+};
+const uint16_t _TempleOS_Tune_High[] = {
+	_A, _A, _A, _A, _A, _A, _A, _A, _A, _A, _A, _A,				// 12
+	_G, _G, _G, _G, _G, _G, _G, _G, _G, _G, _G, _G,				// 12
+	_F, _F, _F, _F, _F, _F, _F, _F, _F, _F, _F, _F,				// 12
+	_F, _F, _F, _F, REST, _A, _A, _A, _A, _A, _A, _A, _A, REST,	// 14
+	_A, _A, _A, _A, _A, _A, _A, _A, _A, _A, _A, _A,				// 12
+	_G, _G, _G, _G, _G, _G, _G, _G, _G, _G, _G, _G,				// 12
+	_F, _F, _F, _F, _F, _F, _F, _F, _F, _F, _F, _F				// 12
+};
+const uint16_t _TempleOS_Tune_Low[] = {
+	_D, _D, _D, _D, _D, _D, _D, _D, _D, _D, _D, _D,					// 12
+	_C, _C, _C, _C, _C, _C, _C, _C, _C, _C, _C, _C,					// 12
+	_Bb, _Bb, _Bb, _Bb, _Bb, _Bb, _Bb, _Bb, _Bb, _Bb, _Bb, _Bb,		// 12
+	_Bb, _Bb, _Bb, _Bb, REST, _D, _D, _D, _D, _D, _D, _D, _D, REST,	// 14
+	_D, _D, _D, _D, _D, _D, _D, _D, _D, _D, _D, _D,					// 12
+	_C, _C, _C, _C, _C, _C, _C, _C, _C, _C, _C, _C,					// 12
+	_Bb, _Bb, _Bb, _Bb, _Bb, _Bb, _Bb, _Bb, _Bb, _Bb, _Bb, _Bb		// 12
 };
 
 
@@ -113,7 +186,7 @@ void main(void) {
 		if (Read_RTC) {
 			// Read day and time on RTC
 			RTC_I2C1_BurstRead(RTC_ADDR, 1, 3, rtc_time_day_response);
-			// Set text for LCD scroll
+			// Set text to be scrolled across LCD A
 			LCD_A_Scroll_SetText(rtc_time_day_response, RTC_Temperature());
 			Read_RTC = 0;						// Reset flag
 		}
@@ -133,6 +206,24 @@ void main(void) {
     		Stepper_Step = (int) RPM * 2;		// Set desired stepper position
     		Stepper_Update();					// Update stepper
     		Stepper_Interrupt = 0;				// Reset flag
+    	}
+
+    	if (Update_Warning_LED) {
+        	if (Backup_Distance < 15) P4->OUT ^= BIT5;
+        	else P4->OUT &= ~BIT5;
+    		Update_Warning_LED = 0;				// Reset flag
+    	}
+
+    	if (Update_Speakers) {
+    		if (TempleOS_Tune[Tune_Index] == REST) TIMER_A3->CCR[0] = 0;
+    		else TIMER_A3->CCR[0] = 3000000 / TempleOS_Tune[Tune_Index];
+    		if (_TempleOS_Tune_High[_Tune_Index] == REST) TIMER_A0->CCR[0] = 0;
+    		else TIMER_A0->CCR[0] = 3000000 / _TempleOS_Tune_High[_Tune_Index];
+    		if (_TempleOS_Tune_Low[_Tune_Index] == REST) TIMER_A1->CCR[0] = 0;
+    		else TIMER_A1->CCR[0] = 3000000 / _TempleOS_Tune_Low[_Tune_Index];
+    		Tune_Index = Tune_Index < TEMPLEOS_TUNE_LENGTH - 1 ? Tune_Index + 1 : 0;
+    		_Tune_Index = _Tune_Index < _TEMPLEOS_TUNE_LENGTH - 1 ? _Tune_Index + 1 : 0;
+    		Update_Speakers = 0;				// Reset flag
     	}
 	}
 }
@@ -158,18 +249,47 @@ void Init(void) {
 //	SYSCTL->WDTRESET_CTL |= 0x00;	// WDT Soft reset
 //	WDT_A->CTL = 0x5A2C;			// Start WDT, 4s timeout
 	SysTick_Init();
-	Timer32_1_Interrupt_Init(3);	// ?? Hz interrupt
-	Timer32_2_Counter_Init();
-	TimerA0_0_Interrupt_s_Init(2);	// 0.5 Hz interrupt
-	TimerA1_0_Interrupt_ms_Init(2);	// 512 Hz interrupt
+	Timer32_1_Interrupt_ms_Init(300);	// 3.3 Hz interrupt
+//	Timer32_2_Counter_Init();
+//	TimerA0_0_Interrupt_ms_Init(512);	// 2 Hz interrupt
+	Timer32_2_Interrupt_ms_Init(512);	// 2 Hz interrupt
+//	TimerA1_0_Interrupt_ms_Init(2);		// 512 Hz interrupt
+	SysTick_Interrupt_ms_Init(2);		// 512 Hz interrupt
 	LCD_Init();
 	Motor_PWM_ADC_Init();
 	SevenSeg_P2_UCA1_Init();
 	Rotary_P3_GPIO_Init();
 	RTC_I2C1_Init();
-	Stepper_P7_Init();				// Initialize stepper GPIO
+	Stepper_P7_Init();					// Initialize stepper GPIO
 	Proximity_GPIO_P4_Init();
-	__enable_irq();					// Enable interrupts
+	__enable_irq();						// Enable interrupts
+
+	// Big speaker
+	P10->SEL1 &= ~BIT5;
+	P10->SEL0 |= BIT5;
+	P10->DIR |= BIT5;
+	TIMER_A3->CCR[0] = 0;
+	TIMER_A3->CCTL[1] = 0x00E0;			// CCR1 reset/set mode 7
+	TIMER_A3->CCR[1] = 500;				// 0.1% of duty cycle
+	TIMER_A3->CTL = 0x0294;				// 10 1001 0100, SMCLK, /4, up mode
+
+	// Piezio High
+	P7->SEL1 &= ~BIT4;
+	P7->SEL0 |= BIT4;
+	P7->DIR |= BIT4;
+	TIMER_A1->CCR[0] = 0;
+	TIMER_A1->CCTL[4] = 0x00E0;			// CCR1 reset/set mode 7
+	TIMER_A1->CCR[4] = 500;				// 0.1% of duty cycle
+	TIMER_A1->CTL = 0x0294;				// 10 1001 0100, SMCLK, /4, up mode
+
+	// Piezio Low
+	P2->SEL1 &= ~BIT7;
+	P2->SEL0 |= BIT7;
+	P2->DIR |= BIT7;
+	TIMER_A0->CCR[0] = 0;
+	TIMER_A0->CCTL[4] = 0x00E0;			// CCR1 reset/set mode 7
+	TIMER_A0->CCR[4] = 500;				// 0.1% of duty cycle
+	TIMER_A0->CTL = 0x0294;				// 10 1001 0100, SMCLK, /4, up mode
 }
 
 
@@ -178,7 +298,7 @@ void Init(void) {
  ********************************************/
 
 /**
- * Timer32.1 periodic ISR
+ * Timer32.1 periodic ISR (3.3 Hz)
  */
 void T32_INT1_IRQHandler(void) {
 	TIMER32_1->INTCLR = 0;					// Reset interrupt flag
@@ -190,20 +310,37 @@ void T32_INT1_IRQHandler(void) {
 	else Speed = RPM = 0;					// Set Speed and RPM to 0 if motor stopped
 }
 
-/**
- * TimerA0.0 periodic ISR
- */
-void TA0_0_IRQHandler(void) {
-	TIMER_A0->CCTL[0] &= ~0x01;	// Reset interrupt flag
-	Read_RTC = 1;				// Flag to read RTC module, reset in main
-	Proximity_Trigger();		// Trigger proximity sensor
-}
+///**
+// * TimerA0.0 periodic ISR (2 Hz)
+// */
+//void TA0_0_IRQHandler(void) {
+//	TIMER_A0->CCTL[0] &= ~0x01;	// Reset interrupt flag
+//	Read_RTC = 1;				// Flag to read RTC module, reset in main
+//	Update_Warning_LED = 1;		// Flag to update warning LED, reset in main
+//}
 
 /**
- * TimerA1_0 periodic ISR (512 Hz)
+ * Timer32.2 periodic ISR (2 Hz)
  */
-void TA1_0_IRQHandler(void) {
-	TIMER_A1->CCTL[0] &= ~0x01;	// Reset interrupt flag
+void T32_INT2_IRQHandler(void) {
+	TIMER32_2->INTCLR = 0;	// Reset interrupt flag
+
+	Read_RTC = 1;			// Flag to read RTC module, reset in main
+	Update_Warning_LED = 1;	// Flag to update warning LED, reset in main
+}
+
+///**
+// * TimerA1_0 periodic ISR (512 Hz)
+// */
+//void TA1_0_IRQHandler(void) {
+//	TIMER_A1->CCTL[0] &= ~0x01;	// Reset interrupt flag
+//	Stepper_Interrupt = 1;		// Set flag, reset in main
+//}
+
+/**
+ * SysTick periodic ISR (512 Hz)
+ */
+void SysTick_Handler(void) {
 	Stepper_Interrupt = 1;		// Set flag, reset in main
 }
 
@@ -216,7 +353,7 @@ void ADC14_IRQHandler(void) {
 	// GL5528 photoresistor ADC interrupt
 	if (ADC14->IFGR0 & BIT4) {
 		// Calculate and update duty cycle for LCD brightness PWM
-		int duty = 1800 - (ADC14->MEM[4] - 60) * 9;
+		int duty = 1800 - (ADC14->MEM[4] - 70) * 9;
 		TIMER_A2->CCR[1] = duty > 200 ? duty : 200;
 	}
 
@@ -225,6 +362,16 @@ void ADC14_IRQHandler(void) {
 		// Calculate and update duty cycle for motor PWM
 		TIMER_A2->CCR[2] = ADC_PWM_Vector[ADC14->MEM[5]];
 	}
+
+	// Set flag to update speakers, reset in main
+	if (Backup_Distance < 15) Update_Speakers = 1;
+	else {
+		TIMER_A3->CCR[0] = 0;
+		TIMER_A0->CCR[0] = 0;
+		TIMER_A1->CCR[0] = 0;
+	}
+
+	Proximity_Trigger();	// Trigger proximity sensor
 
 	ADC14->CLRIFGR0 = 0;	// Reset interrupt flag
 }

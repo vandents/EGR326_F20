@@ -11,6 +11,7 @@ ORDERED_OBJS += \
 "./DS3231_RTC.obj" \
 "./LCD.obj" \
 "./Motor.obj" \
+"./Proximity.obj" \
 "./Rotary.obj" \
 "./ST7735.obj" \
 "./SevenSeg.obj" \
@@ -162,8 +163,8 @@ Final\ Project.hex: $(EXE_OUTPUTS)
 # Other Targets
 clean:
 	-$(RM) $(BIN_OUTPUTS__QUOTED)$(EXE_OUTPUTS__QUOTED)
-	-$(RM) "DS3231_RTC.obj" "LCD.obj" "Motor.obj" "Rotary.obj" "ST7735.obj" "SevenSeg.obj" "Stepper.obj" "Time.obj" "main.obj" "startup_msp432p401r_ccs.obj" "system_msp432p401r.obj" 
-	-$(RM) "DS3231_RTC.d" "LCD.d" "Motor.d" "Rotary.d" "ST7735.d" "SevenSeg.d" "Stepper.d" "Time.d" "main.d" "startup_msp432p401r_ccs.d" "system_msp432p401r.d" 
+	-$(RM) "DS3231_RTC.obj" "LCD.obj" "Motor.obj" "Proximity.obj" "Rotary.obj" "ST7735.obj" "SevenSeg.obj" "Stepper.obj" "Time.obj" "main.obj" "startup_msp432p401r_ccs.obj" "system_msp432p401r.obj" 
+	-$(RM) "DS3231_RTC.d" "LCD.d" "Motor.d" "Proximity.d" "Rotary.d" "ST7735.d" "SevenSeg.d" "Stepper.d" "Time.d" "main.d" "startup_msp432p401r_ccs.d" "system_msp432p401r.d" 
 	-@echo 'Finished clean'
 	-@echo ' '
 
